@@ -1,9 +1,7 @@
 package training.user;
 
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import training.exception.ModelNotFound;
-import training.user.event.UserCreateEvent;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,17 +11,12 @@ import java.util.stream.StreamSupport;
 class UserService {
 
     private final UserRepository userRepository;
-    private final JmsTemplate jmsTemplate;
-
-    UserService(UserRepository userRepository, JmsTemplate jmsTemplate) {
+    UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.jmsTemplate = jmsTemplate;
     }
 
     Long createUser(CreateUserDto createUserDto){
         User user = userRepository.save(UserMapper.toEntity(createUserDto));
-
-        jmsTemplate.convertAndSend("userCreated", new UserCreateEvent(UserMapper.toDto(user)));
         return user.getId();
     }
 
