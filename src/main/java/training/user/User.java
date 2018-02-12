@@ -1,9 +1,6 @@
 package training.user;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
@@ -19,6 +16,8 @@ class User {
     private String surname;
     @Column(nullable = false, unique = true)
     private String email;
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
 
     User(String name, String surname, String email) {
         Objects.requireNonNull(surname);
@@ -27,6 +26,7 @@ class User {
         this.name = name;
         this.surname = surname;
         this.email = email;
+        this.userType = UserType.ADMIN;
     }
 
     private User() {
@@ -58,5 +58,9 @@ class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public UserType getUserType() {
+        return userType;
     }
 }

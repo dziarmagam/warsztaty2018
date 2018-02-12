@@ -1,22 +1,34 @@
 package training.user;
 
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import training.exception.ModelNotFound;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
-class UserService {
+public class UserService {
 
     private final UserRepository userRepository;
-    UserService(UserRepository userRepository) {
+    private final JmsTemplate jmsTemplate;
+
+    UserService(UserRepository userRepository, JmsTemplate jmsTemplate) {
         this.userRepository = userRepository;
+        this.jmsTemplate = jmsTemplate;
+        this.jmsTemplate.setPubSubDomain(true);
+    }
+
+    public Optional<UserDto> findUserByName(String name){
+        return userRepository.findByName(name)
+                .map(UserMapper::toDto);
     }
 
     Long createUser(CreateUserDto createUserDto){
         User user = userRepository.save(UserMapper.toEntity(createUserDto));
+        jmsTemplate.convertAndSend("userCreated.topic", UserMapper.toDto(user));
         return user.getId();
     }
 

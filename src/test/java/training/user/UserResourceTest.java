@@ -62,13 +62,16 @@ public class UserResourceTest {
                 .post(getUserEndpoint()).getBody().print();
         //when
         Response response = RestAssured.given()
+                .auth()
+                .basic("Marcin", "Dziarmaga")
                 .get(getUserEndpoint() + id);
         //then
         response.then()
                 .statusCode(200)
                 .body("name", Matchers.equalTo("Marcin"))
                 .body("surname", Matchers.equalTo("Dziarmaga"))
-                .body("email", Matchers.equalTo("marcin.dziarmaga@email.com"));
+                .body("email", Matchers.equalTo("marcin.dziarmaga@email.com"))
+                .body("userType", Matchers.equalTo("ADMIN"));
 
     }
 

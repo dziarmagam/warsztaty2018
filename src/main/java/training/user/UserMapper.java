@@ -9,6 +9,7 @@ final class UserMapper {
         userDto.setId(user.getId());
         userDto.setName(user.getName());
         userDto.setSurname(user.getSurname());
+        userDto.setUserType(user.getUserType());
         return userDto;
     }
     static User toEntity(CreateUserDto dto){
