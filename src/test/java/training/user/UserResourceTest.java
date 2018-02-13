@@ -19,6 +19,8 @@ import training.Application;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import static org.junit.Assert.*;
 
@@ -73,6 +75,11 @@ public class UserResourceTest {
                 .body("email", Matchers.equalTo("marcin.dziarmaga@email.com"))
                 .body("userType", Matchers.equalTo("ADMIN"));
 
+    }
+
+    @Test
+    public void test() throws UnsupportedEncodingException {
+        System.out.println(URLEncoder.encode("std.ds","UTF-8"));
     }
 
     private String getUserEndpoint() {
