@@ -1,9 +1,15 @@
 package training.user;
 
 enum UserType {
-    ADMIN,
-    CUSTOMER,
-    TESTER;
+    ADMIN("Admin"),
+    CUSTOMER("Customer"),
+    TESTER("Tester");
+
+    String displayName;
+
+    UserType(String tester) {
+
+    }
 }
 
 

@@ -1,9 +1,14 @@
 package training.user;
 
+import javax.validation.constraints.NotNull;
+
 public class CreateUserDto {
 
+    @NotNull
     private String name;
+    @NotNull
     private String surname;
+    @NotNull
     private String email;
 
     public String getName() {

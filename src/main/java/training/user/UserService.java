@@ -60,4 +60,12 @@ public class UserService {
         userRepository.save(user);
     }
 
+    List<UserDto> findByUserType(String userType){
+        UserType userTypeEnum = UserType.valueOf(userType);
+        return StreamSupport.stream(
+                userRepository.findByUserType(userTypeEnum).spliterator(), false)
+                .map(UserMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
 }

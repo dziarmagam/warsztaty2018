@@ -4,6 +4,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/users")
@@ -21,6 +23,12 @@ class UserResource {
         return ResponseEntity.ok(user);
     }
 
+    @GetMapping("/type/{userType}")
+    ResponseEntity getUserByType(@PathVariable String userType){
+        List<UserDto> users = userService.findByUserType(userType);
+        return ResponseEntity.ok(users);
+    }
+
     @GetMapping
     ResponseEntity getUsers(){
         return ResponseEntity.ok(userService.getUsers());
@@ -28,6 +36,9 @@ class UserResource {
 
     @PostMapping
     ResponseEntity createUsers(@RequestBody CreateUserDto createUserDto){
+        Objects.requireNonNull(createUserDto.getEmail());
+        Objects.requireNonNull(createUserDto.getName());
+        Objects.requireNonNull(createUserDto.getSurname());
         Long userId = userService.createUser(createUserDto);
         return ResponseEntity.ok(userId);
     }
@@ -43,5 +54,11 @@ class UserResource {
         userService.update(userDto);
         return ResponseEntity.accepted().build();
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    ResponseEntity handleException(RuntimeException e){
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
 
 }
