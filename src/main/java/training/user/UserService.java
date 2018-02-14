@@ -21,7 +21,7 @@ public class UserService {
         this.jmsTemplate = jmsTemplate;
     }
 
-    public Optional<UserDto> findUserByName(String name){
+    public Optional<UserDto> findUserByName(String name) {
         return userRepository.findByName(name)
                 .map(UserMapper::toDto);
     }
@@ -30,46 +30,47 @@ public class UserService {
      * This method create new {@link User}
      * <p/>
      * Hello
+     *
      * @param createUserDto dto to create user
      * @return return new entity id
      */
-    public Long createUser(CreateUserDto createUserDto){
+    public Long createUser(CreateUserDto createUserDto) {
         User user = userRepository.save(UserMapper.toEntity(createUserDto));
         jmsTemplate.convertAndSend("userCreated.topic", UserMapper.toDto(user));
         return user.getId();
     }
 
-    UserDto getUser(Long id){
+    UserDto getUser(Long id) {
         return userRepository.findById(id)
                 .map(UserMapper::toDto)
                 .orElseThrow(() -> new ModelNotFound("User", id));
     }
 
-    List<UserDto> getUsers(){
+    List<UserDto> getUsers() {
         return StreamSupport.stream(userRepository.findAll().spliterator(), false)
                 .map(UserMapper::toDto)
                 .collect(Collectors.toList());
     }
 
-    void deleteUser(Long id){
+    void deleteUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ModelNotFound("User", id));
 
         userRepository.delete(user);
     }
 
-    void update(UserDto userDto){
+    void update(UserDto userDto) {
         User user = userRepository.findById(userDto.getId())
                 .orElseThrow(() -> new ModelNotFound("User", userDto.getId()));
         user.setEmail(userDto.getEmail());
         user.setName(userDto.getName());
-        if(!user.getSurname().equals(userDto.getSurname())){
+        if (!user.getSurname().equals(userDto.getSurname())) {
             user.setSurname(userDto.getSurname());
         }
         userRepository.save(user);
     }
 
-    List<UserDto> findByUserType(String userType){
+    List<UserDto> findByUserType(String userType) {
         UserType userTypeEnum = UserType.valueOf(userType);
         return StreamSupport.stream(
                 userRepository.findByUserType(userTypeEnum).spliterator(), false)

@@ -1,7 +1,10 @@
 package training.user;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import training.exception.ModelNotFound;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -13,6 +16,7 @@ class UserResource {
 
     private final UserService userService;
     private final Example example;
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserResource.class);
 
     public UserResource(UserService userService, Example example) {
         this.userService = userService;
@@ -42,6 +46,7 @@ class UserResource {
         Objects.requireNonNull(createUserDto.getName());
         Objects.requireNonNull(createUserDto.getSurname());
         Long userId = userService.createUser(createUserDto);
+        LOGGER.info("User created with id: " + userId);
         return ResponseEntity.ok(userId);
     }
 
@@ -63,8 +68,9 @@ class UserResource {
         return ResponseEntity.ok().build();
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    ResponseEntity handleException(RuntimeException e){
+    @ExceptionHandler(ModelNotFound.class)
+    ResponseEntity handleException(ModelNotFound e){
+        LOGGER.error(e.getMessage(), e);
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
