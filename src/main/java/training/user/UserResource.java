@@ -42,9 +42,6 @@ class UserResource {
 
     @PostMapping
     ResponseEntity createUsers(@RequestBody CreateUserDto createUserDto){
-        Objects.requireNonNull(createUserDto.getEmail());
-        Objects.requireNonNull(createUserDto.getName());
-        Objects.requireNonNull(createUserDto.getSurname());
         Long userId = userService.createUser(createUserDto);
         LOGGER.info("User created with id: " + userId);
         return ResponseEntity.ok(userId);

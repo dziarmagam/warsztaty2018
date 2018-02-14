@@ -1,11 +1,14 @@
 package training.user;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import training.exception.ModelNotFound;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -35,6 +38,9 @@ public class UserService {
      * @return return new entity id
      */
     public Long createUser(CreateUserDto createUserDto) {
+        Objects.requireNonNull(createUserDto.getEmail());
+        Objects.requireNonNull(createUserDto.getName());
+        Objects.requireNonNull(createUserDto.getSurname());
         User user = userRepository.save(UserMapper.toEntity(createUserDto));
         jmsTemplate.convertAndSend("userCreated.topic", UserMapper.toDto(user));
         return user.getId();

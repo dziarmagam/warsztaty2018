@@ -6,16 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class UserDto {
-    @Override
-    public String toString() {
-        return "UserDto{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", email='" + email + '\'' +
-                ", userType=" + userType +
-                '}';
-    }
+
 
     private Long id;
     private String name;
@@ -61,5 +52,16 @@ public class UserDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "UserDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", email='" + email + '\'' +
+                ", userType=" + userType +
+                '}';
     }
 }
