@@ -11,21 +11,31 @@ import training.user.UserService;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
-class UserDetailsServiceImpl implements UserDetailsService{
+class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserService userService;
+    private final Map<String, UserDetailsImpl> userDetailsMap;
 
     public UserDetailsServiceImpl(UserService userService) {
         this.userService = userService;
+        userDetailsMap = new HashMap<>();
+    }
+
+    public void updateUserAuth(String name, Collection<? extends GrantedAuthority> authorities){
+        userDetailsMap.get(name).setAuthorities(authorities);
     }
 
     @Override
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
-        return userService.findUserByName(name)
+        UserDetailsImpl userDetails = userService.findUserByName(name)
                 .map(UserDetailsImpl::new)
                 .orElseThrow(() -> new UsernameNotFoundException("User was not found, name: " + name));
+        userDetailsMap.put(name, userDetails);
+        return userDetails;
     }
 
     private class UserDetailsImpl implements UserDetails {
@@ -69,6 +79,10 @@ class UserDetailsServiceImpl implements UserDetailsService{
         @Override
         public boolean isEnabled() {
             return true;
+        }
+
+        public void setAuthorities( Collection<? extends GrantedAuthority> authorities){
+
         }
     }
 }

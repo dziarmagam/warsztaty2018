@@ -12,9 +12,11 @@ import java.util.Objects;
 class UserResource {
 
     private final UserService userService;
+    private final Example example;
 
-    public UserResource(UserService userService) {
+    public UserResource(UserService userService, Example example) {
         this.userService = userService;
+        this.example = example;
     }
 
     @GetMapping("/{id}")
@@ -53,6 +55,12 @@ class UserResource {
     ResponseEntity updateUser(@Valid @RequestBody UserDto userDto){
         userService.update(userDto);
         return ResponseEntity.accepted().build();
+    }
+
+    @GetMapping("/ids/")
+    ResponseEntity getUserIds(){
+        example.findIdBySth();
+        return ResponseEntity.ok().build();
     }
 
     @ExceptionHandler(RuntimeException.class)

@@ -1,18 +1,16 @@
 package training.user;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class UserDto {
 
-    @NotNull
     private Long id;
-    @NotNull
     private String name;
-    @NotNull
     private String surname;
-    @NotNull
     private String email;
-    @NotNull
     private UserType userType;
 
     public UserType getUserType() {

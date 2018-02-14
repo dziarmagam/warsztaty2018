@@ -4,6 +4,7 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import training.exception.ModelNotFound;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,7 +19,6 @@ public class UserService {
     UserService(UserRepository userRepository, JmsTemplate jmsTemplate) {
         this.userRepository = userRepository;
         this.jmsTemplate = jmsTemplate;
-        this.jmsTemplate.setPubSubDomain(true);
     }
 
     public Optional<UserDto> findUserByName(String name){
@@ -26,7 +26,14 @@ public class UserService {
                 .map(UserMapper::toDto);
     }
 
-    Long createUser(CreateUserDto createUserDto){
+    /**
+     * This method create new {@link User}
+     * <p/>
+     * Hello
+     * @param createUserDto dto to create user
+     * @return return new entity id
+     */
+    public Long createUser(CreateUserDto createUserDto){
         User user = userRepository.save(UserMapper.toEntity(createUserDto));
         jmsTemplate.convertAndSend("userCreated.topic", UserMapper.toDto(user));
         return user.getId();
@@ -56,7 +63,9 @@ public class UserService {
                 .orElseThrow(() -> new ModelNotFound("User", userDto.getId()));
         user.setEmail(userDto.getEmail());
         user.setName(userDto.getName());
-        user.setSurname(userDto.getSurname());
+        if(!user.getSurname().equals(userDto.getSurname())){
+            user.setSurname(userDto.getSurname());
+        }
         userRepository.save(user);
     }
 
