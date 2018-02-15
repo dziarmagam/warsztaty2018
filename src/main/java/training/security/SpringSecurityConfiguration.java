@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -12,6 +13,7 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedA
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true)
 class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService securityUserService;
@@ -35,14 +37,15 @@ class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.csrf().disable()
-                .authenticationProvider(preauthAuthProvider())
+//                .authenticationProvider(preauthAuthProvider())
                 .authorizeRequests()
-                .anyRequest().permitAll();
-//                .antMatchers(HttpMethod.POST, "/users").permitAll()
-//                .antMatchers(HttpMethod.POST, "/users/").permitAll()
-//                .anyRequest().hasAnyRole("ADMIN")
-//                .and()
-//                .httpBasic();
+//                .anyRequest().permitAll();
+                .antMatchers(HttpMethod.POST, "/users").permitAll()
+                .antMatchers(HttpMethod.POST, "/users/").permitAll()
+                .antMatchers("/swagger-ui.html").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .httpBasic();
     }
 
     @Bean

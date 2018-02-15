@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
@@ -35,8 +36,15 @@ public class UserResourceTest {
     @LocalServerPort
     private int port;
 
+    @Value("${test}")
+    private String test;
+//    @Value("${main}")
+//    private String main;
+
     @Before
     public void setUp() {
+        System.out.println("-----------------" + test + "----------------");
+//        System.out.println("-----------------" + main + "----------------");
         RestAssured.port = port;
     }
 

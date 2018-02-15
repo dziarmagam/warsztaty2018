@@ -1,5 +1,7 @@
 package training.user;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jms.core.JmsTemplate;
@@ -18,6 +20,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final JmsTemplate jmsTemplate;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger("");
 
     UserService(UserRepository userRepository, JmsTemplate jmsTemplate) {
         this.userRepository = userRepository;

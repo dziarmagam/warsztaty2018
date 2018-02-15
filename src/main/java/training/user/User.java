@@ -27,7 +27,7 @@ class User {
         this.name = name;
         this.surname = surname;
         this.email = email;
-        this.userType = UserType.ADMIN;
+        this.userType = UserType.CUSTOMER;
     }
 
     private User() {
